@@ -47,26 +47,14 @@ class ArchivalObject
   end
 end
 
-class MergeableArchivalObject < ArchivalObject
+class HierarchicalArchivalObject < ArchivalObject
   
   state_machine :initial => :new do
     
-    event :merge_into_other do
-      transition [:new, :updated] => :suppressed
-    end
-    
-    event :receive_merge do
+    event :add_child do
       transition [:new, :updated] => :updated
     end
-  
-    event :transfer_component do
-      transition [:new, :updated] => :suppressed
-    end
     
-    event :receive_transfer do
-      transition [:new, :updated] => :updated
-    end
-  
   end
     
 end
@@ -75,10 +63,28 @@ class Accession < ArchivalObject
   state_machine :initial => :new 
 end
 
-class Resource < MergeableArchivalObject
-  state_machine :initial => :new
+class Resource < HierarchicalArchivalObject
+
+  state_machine :initial => :new do
+    event :transfer_component do
+      transition [:new, :updated] => :updated
+    end
+    
+    event :receive_transfer do
+      transition [:new, :updated] => :updated
+    end
+    
+    event :merge_into_other do
+      transition [:new, :updated] => :suppressed
+    end
+    
+    event :receive_merge do
+      transition [:new, :updated] => :updated
+    end
+  end
+  
 end 
 
-class DigitalObject < MergeableArchivalObject
+class DigitalObject < HierarchicalArchivalObject
   state_machine :initial => :new
 end
