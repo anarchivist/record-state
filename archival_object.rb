@@ -42,3 +42,31 @@ class ArchivalObject
     
   end
 end
+
+class MergeableArchivalObject < ArchivalObject
+  
+  state_machine :initial => :new do
+    
+    event :merge_into_other do
+      transition [:new, :updated] => :suppressed
+    end
+    
+    event :receive_merge do
+      transition [:new, :updated] => :updated
+    end
+  
+  end
+    
+end
+
+class Accession < ArchivalObject
+  state_machine :initial => :new 
+end
+
+class Resource < MergeableArchivalObject
+  state_machine :initial => :new
+end 
+
+class DigitalObject < MergeableArchivalObject
+  state_machine :initial => :new
+end
