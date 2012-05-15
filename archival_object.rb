@@ -4,7 +4,7 @@ class ArchivalObject
   
   state_machine :initial => :new do
     event :update do
-      transition all - [:deleted, :deletion_requested] => :updated, :if => :valid?
+      transition all - [:deleted, :deletion_requested, :suppressed] => :updated, :if => :valid?
     end
     
     event :suppress do
@@ -16,7 +16,7 @@ class ArchivalObject
     end
     
     event :request_deletion do
-      transition all - [:new, :deleted, :deletion_requested] => :deletion_requested
+      transition all - [:deleted, :deletion_requested] => :deletion_requested
     end
     
     event :cancel_request do
