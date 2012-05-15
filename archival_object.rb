@@ -29,8 +29,8 @@ class ArchivalObject
     end
     
     event :destroy do
-      transition all - [:deleted] => :deleted, :if => :user_is_admin?
       transition :deletion_requested => :deleted, :if => :user_can_delete?
+      transition all - [:deletion_requested, :deleted] => :deleted, :if => :user_is_admin?
     end
     
     state all - [:deletion_requested] do
