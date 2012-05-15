@@ -7,6 +7,10 @@ class ArchivalObject
       transition all - [:deleted, :deletion_requested, :suppressed] => :updated, :if => :valid?
     end
     
+    event :deaccession do
+      transition all - [:suppressed, :deleted] => :suppressed
+    end
+    
     event :suppress do
       transition all - [:suppressed, :deleted] => :suppressed
     end
@@ -52,6 +56,14 @@ class MergeableArchivalObject < ArchivalObject
     end
     
     event :receive_merge do
+      transition [:new, :updated] => :updated
+    end
+  
+    event :transfer_component do
+      transition [:new, :updated] => :suppressed
+    end
+    
+    event :receive_transfer do
       transition [:new, :updated] => :updated
     end
   
