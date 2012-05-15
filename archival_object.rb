@@ -9,7 +9,7 @@ class ArchivalObject
     
     event :deaccession do
       # doesn't account for partial deaccessions
-      transition all - [:suppressed, :deleted] => :suppressed
+      transition all - [:suppressed, :deleted, :deletion_requested] => :suppressed
     end
     
     event :suppress do
